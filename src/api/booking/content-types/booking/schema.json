@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bookings",
+  "info": {
+    "singularName": "booking",
+    "pluralName": "bookings",
+    "displayName": "Booking"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "clientName": {
+      "type": "string"
+    },
+    "clientEmail": {
+      "type": "email"
+    },
+    "clientPhone": {
+      "type": "string"
+    },
+    "paymentMethod": {
+      "type": "enumeration",
+      "enum": [
+        "orangemoney",
+        "wave"
+      ]
+    },
+    "transactionCode": {
+      "type": "string",
+      "unique": true
+    },
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "paid",
+        "confirmed",
+        "cancelled"
+      ]
+    },
+    "program": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::program.program"
+    },
+    "service": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::service.service"
+    },
+    "amount": {
+      "type": "biginteger"
+    }
+  }
+}
