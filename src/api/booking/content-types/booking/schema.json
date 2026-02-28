@@ -35,8 +35,8 @@
       "type": "enumeration",
       "enum": [
         "pending",
-        "paid",
-        "confirmed",
+        "validated",
+        "completed",
         "cancelled"
       ]
     },
@@ -52,6 +52,27 @@
     },
     "amount": {
       "type": "biginteger"
+    },
+    "clientCompanyNumber": {
+      "type": "string"
+    },
+    "clientCompanyName": {
+      "type": "string"
+    },
+    "customerType": {
+      "type": "enumeration",
+      "enum": [
+        "B2B",
+        "B2C"
+      ]
+    },
+    "selectedSlot": {
+      "type": "string"
+    },
+    "discovery": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::discovery.discovery"
     }
   }
 }

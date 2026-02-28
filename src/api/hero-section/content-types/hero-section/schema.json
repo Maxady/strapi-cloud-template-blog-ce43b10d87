@@ -30,6 +30,11 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::service.service"
+    },
+    "featuredCoaches": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::coach.coach"
     }
   }
 }

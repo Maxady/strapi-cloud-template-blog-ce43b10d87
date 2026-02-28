@@ -543,12 +543,19 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
   };
   attributes: {
     amount: Schema.Attribute.BigInteger;
+    clientCompanyName: Schema.Attribute.String;
+    clientCompanyNumber: Schema.Attribute.String;
     clientEmail: Schema.Attribute.Email;
     clientName: Schema.Attribute.String;
     clientPhone: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    customerType: Schema.Attribute.Enumeration<['B2B', 'B2C']>;
+    discovery: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::discovery.discovery'
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -558,9 +565,10 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
     paymentMethod: Schema.Attribute.Enumeration<['orangemoney', 'wave']>;
     program: Schema.Attribute.Relation<'oneToOne', 'api::program.program'>;
     publishedAt: Schema.Attribute.DateTime;
+    selectedSlot: Schema.Attribute.String;
     service: Schema.Attribute.Relation<'oneToOne', 'api::service.service'>;
     state: Schema.Attribute.Enumeration<
-      ['pending', 'paid', 'confirmed', 'cancelled']
+      ['pending', 'validated', 'completed', 'cancelled']
     >;
     transactionCode: Schema.Attribute.String & Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
@@ -630,6 +638,37 @@ export interface ApiCoachCoach extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiDiscoveryDiscovery extends Struct.CollectionTypeSchema {
+  collectionName: 'discoveries';
+  info: {
+    displayName: 'Discovery';
+    pluralName: 'discoveries';
+    singularName: 'discovery';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.String;
+    fullName: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::discovery.discovery'
+    > &
+      Schema.Attribute.Private;
+    message: Schema.Attribute.Text;
+    phone: Schema.Attribute.String & Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   collectionName: 'globals';
   info: {
@@ -677,6 +716,7 @@ export interface ApiHeroSectionHeroSection extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    featuredCoaches: Schema.Attribute.Relation<'oneToMany', 'api::coach.coach'>;
     featuredProgram: Schema.Attribute.Relation<
       'oneToOne',
       'api::program.program'
@@ -744,10 +784,14 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    benefices: Schema.Attribute.JSON;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    customerType: Schema.Attribute.Enumeration<['B2C', 'B2B']>;
     description: Schema.Attribute.Text;
+    duration: Schema.Attribute.String;
+    format: Schema.Attribute.String;
     icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
@@ -761,6 +805,7 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     price: Schema.Attribute.BigInteger;
     publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'title'>;
     subtitle: Schema.Attribute.String;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
@@ -1318,6 +1363,7 @@ declare module '@strapi/strapi' {
       'api::booking.booking': ApiBookingBooking;
       'api::category.category': ApiCategoryCategory;
       'api::coach.coach': ApiCoachCoach;
+      'api::discovery.discovery': ApiDiscoveryDiscovery;
       'api::global.global': ApiGlobalGlobal;
       'api::hero-section.hero-section': ApiHeroSectionHeroSection;
       'api::program.program': ApiProgramProgram;

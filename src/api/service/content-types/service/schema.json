@@ -42,6 +42,27 @@
     },
     "price": {
       "type": "biginteger"
+    },
+    "duration": {
+      "type": "string"
+    },
+    "benefices": {
+      "type": "json"
+    },
+    "customerType": {
+      "type": "enumeration",
+      "enum": [
+        "B2C",
+        "B2B"
+      ]
+    },
+    "format": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": false
     }
   }
 }
