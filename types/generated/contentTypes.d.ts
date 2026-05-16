@@ -612,6 +612,7 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
 export interface ApiCoachCoach extends Struct.CollectionTypeSchema {
   collectionName: 'coaches';
   info: {
+    description: 'Profils des coachs';
     displayName: 'Coach';
     pluralName: 'coaches';
     singularName: 'coach';
@@ -621,17 +622,66 @@ export interface ApiCoachCoach extends Struct.CollectionTypeSchema {
   };
   attributes: {
     bio: Schema.Attribute.Text;
-    certifications: Schema.Attribute.Component<'shared.certifications', true>;
+    certifications: Schema.Attribute.JSON;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    fullName: Schema.Attribute.String;
-    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    fullName: Schema.Attribute.String & Schema.Attribute.Required;
+    image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::coach.coach'> &
       Schema.Attribute.Private;
+    order: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
-    specialty: Schema.Attribute.String;
+    specialty: Schema.Attribute.Text & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiCtaCta extends Struct.SingleTypeSchema {
+  collectionName: 'cta';
+  info: {
+    description: 'Configuration du Call-to-Action de contact';
+    displayName: 'CTA';
+    pluralName: 'ctas';
+    singularName: 'cta';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    buttonText: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'R\u00E9server mon \u00E9change gratuit'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    emailDestination: Schema.Attribute.Email &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'contact@softcoaching.com'>;
+    italicWord: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'la ma\u00EEtrise'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::cta.cta'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    reassuranceText: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'\u00C9change confidentiel \u00B7 Sans engagement \u00B7 contact@softcoaching.com'>;
+    subtitle1: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Un premier \u00E9change de 30 minutes, gratuit, sans engagement.'>;
+    subtitle2: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Pour voir si ce que nous faisons correspond \u00E0 ce dont vous avez besoin.'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Pr\u00EAt \u00E0 reprendre'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -702,9 +752,10 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
 }
 
 export interface ApiHeroSectionHeroSection extends Struct.SingleTypeSchema {
-  collectionName: 'hero_sections';
+  collectionName: 'hero_section';
   info: {
-    displayName: 'HeroSection';
+    description: "Configuration de la section Hero de la page d'accueil";
+    displayName: 'Hero Section';
     pluralName: 'hero-sections';
     singularName: 'hero-section';
   };
@@ -712,19 +763,15 @@ export interface ApiHeroSectionHeroSection extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    countdownEnabled: Schema.Attribute.Boolean;
+    backgroundImage: Schema.Attribute.Media<'images'>;
+    badge: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'CABINET DE COACHING \u00B7 DAKAR, SENEGAL'>;
+    boutons: Schema.Attribute.JSON & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    featuredCoaches: Schema.Attribute.Relation<'oneToMany', 'api::coach.coach'>;
-    featuredProgram: Schema.Attribute.Relation<
-      'oneToOne',
-      'api::program.program'
-    >;
-    featuredService: Schema.Attribute.Relation<
-      'oneToOne',
-      'api::service.service'
-    >;
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -732,7 +779,9 @@ export interface ApiHeroSectionHeroSection extends Struct.SingleTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    type: Schema.Attribute.Enumeration<['service', 'program']>;
+    sousTitre: Schema.Attribute.String & Schema.Attribute.Required;
+    stats: Schema.Attribute.JSON & Schema.Attribute.Required;
+    titre: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -791,8 +840,8 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     customerType: Schema.Attribute.Enumeration<['B2C', 'B2B']>;
     description: Schema.Attribute.Text;
     duration: Schema.Attribute.String;
+    emoji: Schema.Attribute.String;
     format: Schema.Attribute.String;
-    icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
@@ -807,6 +856,63 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'title'>;
     subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSituationSituation extends Struct.CollectionTypeSchema {
+  collectionName: 'situations';
+  info: {
+    displayName: 'Situation';
+    pluralName: 'situations';
+    singularName: 'situation';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::situation.situation'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiStepStep extends Struct.CollectionTypeSchema {
+  collectionName: 'steps';
+  info: {
+    displayName: 'Step';
+    pluralName: 'steps';
+    singularName: 'step';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::step.step'> &
+      Schema.Attribute.Private;
+    number: Schema.Attribute.String;
+    order: Schema.Attribute.Integer;
+    publishedAt: Schema.Attribute.DateTime;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1363,11 +1469,14 @@ declare module '@strapi/strapi' {
       'api::booking.booking': ApiBookingBooking;
       'api::category.category': ApiCategoryCategory;
       'api::coach.coach': ApiCoachCoach;
+      'api::cta.cta': ApiCtaCta;
       'api::discovery.discovery': ApiDiscoveryDiscovery;
       'api::global.global': ApiGlobalGlobal;
       'api::hero-section.hero-section': ApiHeroSectionHeroSection;
       'api::program.program': ApiProgramProgram;
       'api::service.service': ApiServiceService;
+      'api::situation.situation': ApiSituationSituation;
+      'api::step.step': ApiStepStep;
       'api::testimonial.testimonial': ApiTestimonialTestimonial;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

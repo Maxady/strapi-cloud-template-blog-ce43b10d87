@@ -1,0 +1,51 @@
+{
+  "kind": "singleType",
+  "collectionName": "cta",
+  "info": {
+    "singularName": "cta",
+    "pluralName": "ctas",
+    "displayName": "CTA",
+    "description": "Configuration du Call-to-Action de contact"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "Prêt à reprendre"
+    },
+    "italicWord": {
+      "type": "string",
+      "required": true,
+      "default": "la maîtrise"
+    },
+    "subtitle1": {
+      "type": "string",
+      "required": true,
+      "default": "Un premier échange de 30 minutes, gratuit, sans engagement."
+    },
+    "subtitle2": {
+      "type": "string",
+      "required": true,
+      "default": "Pour voir si ce que nous faisons correspond à ce dont vous avez besoin."
+    },
+    "buttonText": {
+      "type": "string",
+      "required": true,
+      "default": "Réserver mon échange gratuit"
+    },
+    "reassuranceText": {
+      "type": "string",
+      "required": true,
+      "default": "Échange confidentiel · Sans engagement · contact@softcoaching.com"
+    },
+    "emailDestination": {
+      "type": "email",
+      "required": true,
+      "default": "contact@softcoaching.com"
+    }
+  }
+}
